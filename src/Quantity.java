@@ -1,42 +1,32 @@
-package com.apps.quantitymeasurement;
-
-public class Quantity {
+public class Quantity{
     private final double value;
     private final LengthUnit unit;
 
     public Quantity(double value, LengthUnit unit) {
+        if (!Double.isFinite(value)) throw new IllegalArgumentException("Invalid value");
         this.value = value;
         this.unit = unit;
     }
 
-    public enum LengthUnit {
-        INCHES(1.0),
-        FEET(12.0),
-        YARDS(36.0),
-        CENTIMETERS(0.393701);
+    // Static API for raw conversion
+    public static double convert(double value, LengthUnit source, LengthUnit target) {
+        if (source == null || target == null) throw new IllegalArgumentException("Units cannot be null");
+        return (value * source.getFactor()) / target.getFactor();
+    }
 
-        public final double factor;
-
-        LengthUnit(double factor) {
-            this.factor = factor;
-        }
+    // Instance method for object-oriented conversion
+    public Quantity convertTo(LengthUnit targetUnit) {
+        return new Quantity(convert(this.value, this.unit, targetUnit), targetUnit);
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Quantity that = (Quantity) o;
-
-        double thisInInches = this.value * this.unit.factor;
-        double thatInInches = that.value * that.unit.factor;
-
-        return Math.abs(thisInInches - thatInInches) < 0.01;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Quantity)) return false;
+        Quantity that = (Quantity) obj;
+        return Math.abs((this.value * this.unit.getFactor()) - (that.value * that.unit.getFactor())) < 1e-6;
     }
 
     @Override
-    public int hashCode() {
-        return Double.hashCode(value * unit.factor);
-    }
+    public String toString() { return value + " " + unit; }
 }
