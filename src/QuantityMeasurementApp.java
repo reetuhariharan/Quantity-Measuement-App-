@@ -1,35 +1,36 @@
-package com.apps.quantitymeasurement;
-
 public class QuantityMeasurementApp {
 
-    public static class Feet {
-        private final double value;
+    public enum Unit {
+        FEET, INCHES
+    }
 
-        public Feet(double value) {
+    public static class Quantity {
+        private final double value;
+        private final Unit unit;
+
+        public Quantity(double value, Unit unit) {
             this.value = value;
+            this.unit = unit;
         }
 
         @Override
-        public boolean equals(Object obj) {
-
-            // 1. Same reference
-            if (this == obj) return true;
-
-            // 2. Null or different class
-            if (obj == null || getClass() != obj.getClass()) return false;
-
-            // 3. Cast
-            Feet feet = (Feet) obj;
-
-            // 4. Compare values
-            return Double.compare(feet.value, this.value) == 0;
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Quantity quantity = (Quantity) o;
+            // Note: This UC2 implementation keeps units separate as per requirements
+            return Double.compare(quantity.value, value) == 0 && unit == quantity.unit;
         }
     }
 
-    public static void main(String[] args) {
-        Feet f1 = new Feet(1.0);
-        Feet f2 = new Feet(1.0);
+    public static boolean checkEquality(double val1, double val2, Unit unit) {
+        Quantity q1 = new Quantity(val1, unit);
+        Quantity q2 = new Quantity(val2, unit);
+        return q1.equals(q2);
+    }
 
-        System.out.println(f1.equals(f2)); // should print true
+    public static void main(String[] args) {
+        System.out.println("1.0 inch == 1.0 inch: " + checkEquality(1.0, 1.0, Unit.INCHES));
+        System.out.println("1.0 ft == 1.0 ft: " + checkEquality(1.0, 1.0, Unit.FEET));
     }
 }
