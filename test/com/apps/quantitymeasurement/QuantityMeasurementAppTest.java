@@ -1,51 +1,59 @@
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class QuantityMeasurementAppTest {
 
-    // 1. testEquality_SameValue()
+    // Test: 1.0 Feet == 1.0 Feet
     @Test
-    public void givenSameValue_WhenCompared_ShouldReturnTrue() {
-        QuantityMeasurementApp.Quantity inch1 = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.INCHES);
-        QuantityMeasurementApp.Quantity inch2 = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.INCHES);
-        assertEquals(inch1, inch2);
+    public void testEquality_FeetToFeet_SameValue() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity f2 = new Quantity(1.0, LengthUnit.FEET);
+        Assert.assertEquals(f1, f2);
     }
 
-    // 2. testEquality_DifferentValue()
+    // Test: 1.0 Inch == 1.0 Inch
     @Test
-    public void givenDifferentValue_WhenCompared_ShouldReturnFalse() {
-        QuantityMeasurementApp.Quantity feet1 = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.FEET);
-        QuantityMeasurementApp.Quantity feet2 = new QuantityMeasurementApp.Quantity(2.0, QuantityMeasurementApp.Unit.FEET);
-        assertNotEquals(feet1, feet2);
+    public void testEquality_InchToInch_SameValue() {
+        Quantity i1 = new Quantity(1.0, LengthUnit.INCH);
+        Quantity i2 = new Quantity(1.0, LengthUnit.INCH);
+        Assert.assertEquals(i1, i2);
     }
 
-    // 3. testEquality_NullComparison()
+    // Test Cross-Unit: 1.0 Feet == 12.0 Inches
     @Test
-    public void givenNullValue_WhenCompared_ShouldReturnFalse() {
-        QuantityMeasurementApp.Quantity inch = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.INCHES);
-        assertNotEquals(null, inch);
+    public void testEquality_FeetToInch_EquivalentValue() {
+        Quantity feet = new Quantity(1.0, LengthUnit.FEET);
+        Quantity inches = new Quantity(12.0, LengthUnit.INCH);
+        Assert.assertEquals(feet, inches);
     }
 
-    // 4. testEquality_TypeSafety() (Handles Non-Numeric/Different Object types)
+    // Test Symmetry: 12.0 Inches == 1.0 Feet
     @Test
-    public void givenDifferentObjectType_WhenCompared_ShouldReturnFalse() {
-        QuantityMeasurementApp.Quantity feet = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.FEET);
-        String notAQuantity = "1.0";
-        assertNotEquals(feet, notAQuantity);
+    public void testEquality_InchToFeet_EquivalentValue() {
+        Quantity inches = new Quantity(12.0, LengthUnit.INCH);
+        Quantity feet = new Quantity(1.0, LengthUnit.FEET);
+        Assert.assertEquals(inches, feet);
     }
 
-    // 5. testEquality_SameReference()
+    // Test: 1.0 Feet != 2.0 Feet
     @Test
-    public void givenSameReference_WhenCompared_ShouldReturnTrue() {
-        QuantityMeasurementApp.Quantity inch = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.INCHES);
-        assertEquals(inch, inch);
+    public void testEquality_FeetToFeet_DifferentValue() {
+        Quantity f1 = new Quantity(1.0, LengthUnit.FEET);
+        Quantity f2 = new Quantity(2.0, LengthUnit.FEET);
+        Assert.assertNotEquals(f1, f2);
     }
 
-    // Bonus: Ensure Units remain separate as per UC2 requirements
+    // Test Reflexive: a.equals(a)
     @Test
-    public void givenSameValueButDifferentUnits_WhenCompared_ShouldReturnFalse() {
-        QuantityMeasurementApp.Quantity inch = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.INCHES);
-        QuantityMeasurementApp.Quantity feet = new QuantityMeasurementApp.Quantity(1.0, QuantityMeasurementApp.Unit.FEET);
-        assertNotEquals(inch, feet);
+    public void testEquality_SameReference() {
+        Quantity feet = new Quantity(1.0, LengthUnit.FEET);
+        Assert.assertEquals(feet, feet);
+    }
+
+    // Test Null Comparison: a.equals(null) is false
+    @Test
+    public void testEquality_NullComparison() {
+        Quantity feet = new Quantity(1.0, LengthUnit.FEET);
+        Assert.assertNotEquals(null, feet);
     }
 }
